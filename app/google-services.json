@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "645710885463",
+    "firebase_url": "https://bike-sos-1475263821137.firebaseio.com",
+    "project_id": "bike-sos-1475263821137",
+    "storage_bucket": "bike-sos-1475263821137.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645710885463:android:187ac923ed7c7893",
+        "android_client_info": {
+          "package_name": "com.bike_sos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645710885463-gd8d1d25476sl9lp3b18bpofqn7c0pu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdSBT9h8aC6PCwJzAhRYBfTym4epGAPi0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -26,17 +26,11 @@ public class MyFirebaseInstanceIDService extends com.google.firebase.iid.Firebas
 
     private void registerToken(String token) {
 
-        System.out.println("TOKEN: " + token);
-        System.out.println("TOKEN: " + token);
-        System.out.println("TOKEN: " + token);
-        System.out.println("TOKEN: " + token);
-
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
                 .add("Token",token)
                 .build();
 
-        // URL NOT SETUP YET
         Request request = new Request.Builder()
                 .url("http://192.168.2.13:3000")
                 .post(body)

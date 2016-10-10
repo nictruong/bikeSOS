@@ -35,8 +35,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            gpsLat = Double.parseDouble(extras.getString("gpsLat"));
-            gpsLong = Double.parseDouble(extras.getString("gpsLong"));
+            gpsLat = extras.getDouble("gpsLat");
+            gpsLong = extras.getDouble("gpsLong");
         }
 
         LatLng position = new LatLng(gpsLat, gpsLong);

@@ -1,5 +1,6 @@
 package com.bike_sos;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -16,18 +17,15 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
+import android.Manifest;
 
 /**
  * Created by Nicolas on 10/3/2016.
  */
 
 public class GPSTracker extends Service implements LocationListener {
-    private final Context mContext;
-
-    private static final String[] INITIAL_PERMS={
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.READ_CONTACTS
-    };
+    private final Activity activity;
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -50,21 +48,16 @@ public class GPSTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSTracker(Context context) {
-        this.mContext = context;
-        getLocation(this.mContext);
+    public GPSTracker(Activity activity) {
+        this.activity = activity;
+        getLocation(this.activity);
     }
 
-    public Location getLocation(Context context) {
-
-        System.out.println(Build.VERSION.SDK_INT >= 23);
-        System.out.println(ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED);
-        System.out.println(ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION ));
-        System.out.println(PackageManager.PERMISSION_GRANTED);
+    public Location getLocation(Activity activity) {
 
         try {
 
-            locationManager = (LocationManager) mContext
+            locationManager = (LocationManager) activity
                     .getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
@@ -77,7 +70,6 @@ public class GPSTracker extends Service implements LocationListener {
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
-                System.out.println("BLEEP");
             } else {
                 this.canGetLocation = true;
                 // First get location from Network Provider
@@ -175,11 +167,8 @@ public class GPSTracker extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
-    /**
-     * Function to show settings alert dialog
-     * */
     public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
@@ -187,14 +176,11 @@ public class GPSTracker extends Service implements LocationListener {
         // Setting Dialog Message
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
 
-        // Setting Icon to Dialog
-        //alertDialog.setIcon(R.drawable.delete);
-
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                activity.startActivity(intent);
             }
         });
 
@@ -208,4 +194,5 @@ public class GPSTracker extends Service implements LocationListener {
         // Showing Alert Message
         alertDialog.show();
     }
+
 }

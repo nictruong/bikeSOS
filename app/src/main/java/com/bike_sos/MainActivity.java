@@ -1,10 +1,13 @@
 package com.bike_sos;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -20,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     String Token;
     boolean thread_running = true;
-
-    private final int REQUEST_PERMISSION_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,36 +65,35 @@ public class MainActivity extends AppCompatActivity {
     public void sendSOS(View view) {
         System.out.println("Sending signal");
 
-        ActivityCompat.requestPermissions(
-                this,
-                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION},
-                REQUEST_PERMISSION_LOCATION);
+        // create class object
+        GPSTracker gps = new GPSTracker(MainActivity.this);
 
-        GPSTracker gpsTracker = new GPSTracker(this);
-        String gpsLat = String.valueOf(gpsTracker.getLatitude());
-        String gpsLong = String.valueOf(gpsTracker.getLongitude());
+        // check if GPS enabled
+        if(gps.canGetLocation()){
 
-        /*OkHttpClient client = new OkHttpClient();
-        RequestBody body = new FormBody.Builder()
-                .add("Token", token)
-                .build();
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
 
-        Request request = new Request.Builder()
-                .url("http://192.168.2.13:3000")
-                .post(body)
-                .build();
+            Intent intent = new Intent(this, MapsActivity.class);
 
-        try {
-            client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+            intent.putExtra("gpsLat", latitude);
+            intent.putExtra("gpsLong", longitude);
 
-        Intent intent = new Intent(this, MapsActivity.class);
+            sendGPStoServer(Double.toString(latitude), Double.toString(longitude));
 
-        intent.putExtra("gpsLat", gpsLat);
-        intent.putExtra("gpsLong", gpsLong);
+            //**startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();*/
+        }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
+    }
 
-        startActivity(intent);
+    public void sendGPStoServer(String latitude, String longitude) {
+        CallAPI callAPI = new CallAPI();
+        String[] coordinates = {latitude, longitude};
+        callAPI.execute(coordinates);
     }
 }

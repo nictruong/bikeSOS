@@ -1,7 +1,6 @@
 package com.bike_sos;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
+import android.os.AsyncTask;
 
 import java.io.IOException;
 
@@ -11,33 +10,32 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * Created by Nicolas on 10/2/2016.
+ * Created by Nicolas on 10/9/2016.
  */
 
-public class MyFirebaseInstanceIDService extends com.google.firebase.iid.FirebaseInstanceIdService {
-
-    @Override
-    public void onTokenRefresh() {
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        registerToken(token);
+public class CallAPI extends AsyncTask<String, String, String> {
+    public CallAPI() {
+        super();
     }
 
-    private void registerToken(String token) {
+    @Override
+    protected String doInBackground(String... params) {
+        System.out.println("HELLO");
+        System.out.println("HELLO");
+        System.out.println("HELLO");
+        System.out.println("HELLO");
 
-        System.out.println("HELLO");
-        System.out.println("HELLO");
-        System.out.println("HELLO");
-        System.out.println("HELLO");
+        String latitude = params[0];
+        String longitude = params[1];
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
-                .add("Token",token)
+                .add("latitude", latitude)
+                .add("longitude", longitude)
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://192.168.2.13:3000/register")
+                .url("http://192.168.2.13:3000/gpsSignal")
                 .post(body)
                 .build();
 
@@ -46,5 +44,7 @@ public class MyFirebaseInstanceIDService extends com.google.firebase.iid.Firebas
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 }
